@@ -19,7 +19,14 @@ namespace BlobStorage
             await blobContainerClient.UploadBlobAsync(fileName, fileStream);
         }
 
-        public async Task<BlobContainerClient> CreateOrGetBlobContainerClient(string containerName)
+        public async Task<Stream> DownloadFileFromBlob(string fileName,string containerName)
+        {
+            var blobContainerClient = await CreateOrGetBlobContainerClient(containerName);
+            var blobClient = blobContainerClient.GetBlobClient(fileName);
+            return await blobClient.OpenReadAsync();
+        }
+
+        private async Task<BlobContainerClient> CreateOrGetBlobContainerClient(string containerName)
         {
             try
             {
